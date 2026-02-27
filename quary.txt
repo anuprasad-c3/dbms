@@ -132,6 +132,77 @@ mysql> describe depentants;
 | regions           |
 +-------------------+
 
+mysql> select * from countries;
++------------+----------------+-----------+
+| country_id | country_name   | region_id |
++------------+----------------+-----------+
+| IN         | India          |         1 |
+| UK         | United Kingdom |         2 |
++------------+----------------+-----------+
+2 rows in set (0.00 sec)
+
+mysql> select * from departments;
++---------+-----------+-------------+
+| dept_id | dept_name | location_id |
++---------+-----------+-------------+
+|       1 | IT        |        1700 |
+|       2 | HR        |        1700 |
+|       3 | Finance   |        1800 |
+|       4 | Marketing |        1800 |
++---------+-----------+-------------+
+4 rows in set (0.00 sec)
+
+mysql> select * from depentants;
++---------+------------+-----------+--------------+-------------+
+| dept_id | first_name | last_name | relationship | employee_id |
++---------+------------+-----------+--------------+-------------+
+|       1 | Anu        | sharma    | Daughter     |         101 |
+|       2 | sara       | khan      | wife         |         102 |
++---------+------------+-----------+--------------+-------------+
+2 rows in set (0.00 sec)
+
+mysql> select * from employees;
++-------------+------------+-----------+-----------------+----------+------------+---------+----------+------------+---------+------------+
+| employee_id | first_name | last_name | email           | phone_no | hire_date  | job_id  | salary   | manager_id | dept_id | commission |
++-------------+------------+-----------+-----------------+----------+------------+---------+----------+------------+---------+------------+
+|         101 | Rahul      | sharma    | rahul@gmail.com | 999991   | 2022-01-10 | IT-PROG | 15000.00 |       NULL |       1 |    2000.00 |
+|         102 | Aishd      | khan      | Aishd@gmail.com | 999992   | 2022-01-12 | HR-Rep  |  9000.00 |        101 |       2 |       NULL |
+|         103 | John       | smith     | john@gmail.com  | 99999    | 2023-04-15 | FIN-Acc | 12000.00 |        101 |       3 |    1500.00 |
+|         104 | Priya      | nair      | priya@gmail.com | 999994   | 2023-04-18 | IT-PROG |  7000.00 |        101 |       1 |       NULL |
+|         105 | David      | brown     | david@gmail.com | 999995   | 2022-05-20 | MKT-Man | 22000.00 |        103 |       4 |    3000.00 |
++-------------+------------+-----------+-----------------+----------+------------+---------+----------+------------+---------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from jobs;
++---------+-------------------+------------+------------+
+| job_id  | job_title         | min_salary | max_salary |
++---------+-------------------+------------+------------+
+| FIN-Acc | Accountant        |    6000.00 |   25000.00 |
+| HR-Rep  | HR Repesent       |    4000.00 |   15000.00 |
+| IT-PROG | programer         |    5000.00 |   20000.00 |
+| MKT-Man | Marketing Manager |    8000.00 |   25000.00 |
++---------+-------------------+------------+------------+
+4 rows in set (0.00 sec)
+
+mysql> select * from locations;
++-------------+----------------+-------------+-----------+----------------+------------+
+| location_id | street_address | postal_code | city      | state_province | country_id |
++-------------+----------------+-------------+-----------+----------------+------------+
+|        1700 | mgroad         | 56000       | Bangalore | Karnataka      | IN         |
+|        1800 | Oxfored        | w1          | London    | London         | UK         |
++-------------+----------------+-------------+-----------+----------------+------------+
+2 rows in set (0.00 sec)
+
+mysql> select * from regions;
++-----------+-------------+
+| region_id | region_name |
++-----------+-------------+
+|         1 | Asia        |
+|         2 | Europe      |
++-----------+-------------+
+2 rows in set (0.00 sec)
+
+
 1) SELECT first_name,last_name FROM employees JOIN departments USING (dept_id) WHERE location_id=1700;
 +------------+-----------+
 | first_name | last_name |
