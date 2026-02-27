@@ -1,0 +1,361 @@
+Database changed
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| company            |
+| information_schema |
+| mea                |
+| mysql              |
+| org                |
+| organisation       |
+| performance_schema |
+| sys                |
++--------------------+
+8 rows in set (0.00 sec)
+
+
+mysql> show tables;
++-------------------+
+| Tables_in_company |
++-------------------+
+| countries         |
+| departments       |
+| depentants        |
+| employees         |
+| jobs              |
+| locations         |
+| regions           |
++-------------------+
+7 rows in set (0.00 sec)
+
+mysql> describe countries;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| country_id   | varchar(5)  | NO   | PRI | NULL    |       |
+| country_name | varchar(50) | NO   |     | NULL    |       |
+| region_id    | int         | YES  | MUL | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+3 rows in set (0.05 sec)
+
+mysql> describe departments;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| dept_id     | int         | NO   | PRI | NULL    |       |
+| dept_name   | varchar(50) | YES  |     | NULL    |       |
+| location_id | int         | YES  | MUL | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> describe dependants;
+ERROR 1146 (42S02): Table 'company.dependants' doesn't exist
+mysql> describe dependant;
+ERROR 1146 (42S02): Table 'company.dependant' doesn't exist
+mysql> describe dependants;
+ERROR 1146 (42S02): Table 'company.dependants' doesn't exist
+mysql> describe employees;
++-------------+---------------+------+-----+---------+-------+
+| Field       | Type          | Null | Key | Default | Extra |
++-------------+---------------+------+-----+---------+-------+
+| employee_id | int           | NO   | PRI | NULL    |       |
+| first_name  | varchar(50)   | YES  |     | NULL    |       |
+| last_name   | varchar(50)   | YES  |     | NULL    |       |
+| email       | varchar(100)  | YES  |     | NULL    |       |
+| phone_no    | varchar(20)   | YES  |     | NULL    |       |
+| hire_date   | date          | YES  |     | NULL    |       |
+| job_id      | varchar(10)   | YES  | MUL | NULL    |       |
+| salary      | decimal(10,2) | YES  |     | NULL    |       |
+| manager_id  | int           | YES  | MUL | NULL    |       |
+| dept_id     | int           | YES  | MUL | NULL    |       |
++-------------+---------------+------+-----+---------+-------+
+10 rows in set (0.00 sec)
+
+mysql> describe jobs;
++------------+---------------+------+-----+---------+-------+
+| Field      | Type          | Null | Key | Default | Extra |
++------------+---------------+------+-----+---------+-------+
+| job_id     | varchar(10)   | NO   | PRI | NULL    |       |
+| job_title  | varchar(50)   | YES  |     | NULL    |       |
+| min_salary | decimal(10,2) | YES  |     | NULL    |       |
+| max_salary | decimal(10,2) | YES  |     | NULL    |       |
++------------+---------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> describe locations;
++----------------+--------------+------+-----+---------+-------+
+| Field          | Type         | Null | Key | Default | Extra |
++----------------+--------------+------+-----+---------+-------+
+| location_id    | int          | NO   | PRI | NULL    |       |
+| street_address | varchar(100) | YES  |     | NULL    |       |
+| postal_code    | varchar(20)  | YES  |     | NULL    |       |
+| city           | varchar(50)  | YES  |     | NULL    |       |
+| state_province | varchar(50)  | YES  |     | NULL    |       |
+| country_id     | varchar(50)  | YES  | MUL | NULL    |       |
++----------------+--------------+------+-----+---------+-------+
+6 rows in set (0.01 sec)
+
+mysql> describe regions;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| region_id   | int         | NO   | PRI | NULL    |       |
+| region_name | varchar(50) | NO   |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+
+
+
+mysql> describe depentants;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| dept_id      | int         | NO   | PRI | NULL    |       |
+| first_name   | varchar(50) | YES  |     | NULL    |       |
+| last_name    | varchar(50) | YES  |     | NULL    |       |
+| relationship | varchar(30) | YES  |     | NULL    |       |
+| employee_id  | int         | YES  | MUL | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
++-------------------+
+| Tables_in_company |
++-------------------+
+| countries         |
+| departments       |
+| depentants        |
+| employees         |
+| jobs              |
+| locations         |
+| regions           |
++-------------------+
+
+1) SELECT first_name,last_name FROM employees JOIN departments USING (dept_id) WHERE location_id=1700;
++------------+-----------+
+| first_name | last_name |
++------------+-----------+
+| Rahul      | sharma    |
+| Aishd      | khan      |
+| Priya      | nair      |
++------------+-----------+
+
+2)SELECT first_name,last_name FROM employees JOIN departments USING (dept_id) WHERE location_id<>1700;
++------------+-----------+
+| first_name | last_name |
++------------+-----------+
+| John       | smith     |
+| David      | brown     |
++------------+-----------+
+
+3)SELECT * FROM employees WHERE salary=(SELECT MAX(salary) FROM employees);
++-------------+------------+-----------+-----------------+----------+------------+---------+----------+------------+---------+
+| employee_id | first_name | last_name | email           | phone_no | hire_date  | job_id  | salary   | manager_id | dept_id |
++-------------+------------+-----------+-----------------+----------+------------+---------+----------+------------+---------+
+|         105 | David      | brown     | david@gmail.com | 999995   | 2022-05-20 | MKT-Man | 22000.00 |        103 |       4 |
++-------------+------------+-----------+-----------------+----------+------------+---------+----------+------------+---------+
+
+4)SELECT * FROM employees WHERE salary>(SELECT AVG(salary) FROM employees);
++-------------+------------+-----------+-----------------+----------+------------+---------+----------+------------+---------+
+| employee_id | first_name | last_name | email           | phone_no | hire_date  | job_id  | salary   | manager_id | dept_id |
++-------------+------------+-----------+-----------------+----------+------------+---------+----------+------------+---------+
+|         101 | Rahul      | sharma    | rahul@gmail.com | 999991   | 2022-01-10 | IT-PROG | 15000.00 |       NULL |       1 |
+|         105 | David      | brown     | david@gmail.com | 999995   | 2022-05-20 | MKT-Man | 22000.00 |        103 |       4 |
++-------------+------------+-----------+-----------------+----------+------------+---------+----------+------------+---------+
+
+5) SELECT DISTINCT dept_id,dept_name FROM departments JOIN employees USING (dept_id) WHERE salary>1000;
++---------+-----------+
+| dept_id | dept_name |
++---------+-----------+
+|       1 | IT        |
+|       2 | HR        |
+|       3 | Finance   |
+|       4 | Marketing |
++---------+-----------+
+
+6) SELECT dept_id,dept_name FROM departments WHERE dept_id NOT IN (SELECT dept_id FROM employees WHERE salary>1000);
+Empty set (0.00 sec)
+
+7)SELECT * FROM employees WHERE salary>ALL (SELECT MIN(salary) FROM employees GROUP BY dept_id);
+Empty set (0.00 sec)
+
+8)SELECT * FROM employees WHERE salary>=ALL (SELECT MAX(salary) FROM employees GROUP BY dept_id);
++-------------+------------+-----------+-----------------+----------+------------+---------+----------+------------+---------+
+| employee_id | first_name | last_name | email           | phone_no | hire_date  | job_id  | salary   | manager_id | dept_id |
++-------------+------------+-----------+-----------------+----------+------------+---------+----------+------------+---------+
+|         105 | David      | brown     | david@gmail.com | 999995   | 2022-05-20 | MKT-Man | 22000.00 |        103 |       4 |
++-------------+------------+-----------+-----------------+----------+------------+---------+----------+------------+---------+
+
+9)SELECT AVG(avg_salary) FROM (SELECT AVG(salary) AS avg_salary FROM employees GROUP BY dept_id) AS dept_avg;
++------------------+
+| AVG(avg_salary)  |
++------------------+
+| 13500.0000000000 |
++------------------+
+
+10) SELECT first_name,salary,(SELECT AVG(salary) FROM employees) AS avg_salary,salary-(SELECT AVG(salary) FROM employees) AS difference FROM employees;
++------------+----------+--------------+--------------+
+| first_name | salary   | avg_salary   | difference   |
++------------+----------+--------------+--------------+
+| Rahul      | 15000.00 | 13000.000000 |  2000.000000 |
+| Aishd      |  9000.00 | 13000.000000 | -4000.000000 |
+| John       | 12000.00 | 13000.000000 | -1000.000000 |
+| Priya      |  7000.00 | 13000.000000 | -6000.000000 |
+| David      | 22000.00 | 13000.000000 |  9000.000000 |
++------------+----------+--------------+--------------+
+
+
+11)SELECT * FROM employees e WHERE salary>(SELECT AVG(salary) FROM employees WHERE dept_id=e.dept_id);
++-------------+------------+-----------+-----------------+----------+------------+---------+----------+------------+---------+
+| employee_id | first_name | last_name | email           | phone_no | hire_date  | job_id  | salary   | manager_id | dept_id |
++-------------+------------+-----------+-----------------+----------+------------+---------+----------+------------+---------+
+|         101 | Rahul      | sharma    | rahul@gmail.com | 999991   | 2022-01-10 | IT-PROG | 15000.00 |       NULL |       1 |
++-------------+------------+-----------+-----------------+----------+------------+---------+----------+------------+---------+
+
+12)SELECT * FROM employees e WHERE NOT EXISTS (SELECT * FROM depentants d WHERE d.employee_id=e.employee_id);
++-------------+------------+-----------+-----------------+----------+------------+---------+----------+------------+---------+
+| employee_id | first_name | last_name | email           | phone_no | hire_date  | job_id  | salary   | manager_id | dept_id |
++-------------+------------+-----------+-----------------+----------+------------+---------+----------+------------+---------+
+|         103 | John       | smith     | john@gmail.com  | 999993   | 2023-04-15 | FIN-Acc | 12000.00 |        101 |       3 |
+|         104 | Priya      | nair      | priya@gmail.com | 999994   | 2023-04-18 | IT-PROG |  7000.00 |        101 |       1 |
+|         105 | David      | brown     | david@gmail.com | 999995   | 2022-05-20 | MKT-Man | 22000.00 |        103 |       4 |
++-------------+------------+-----------+-----------------+----------+------------+---------+----------+------------+---------+
+
+13)SELECT e.first_name,e.last_name,d.dept_name FROM employees e JOIN departments d ON e.dept_id=d.dept_id WHERE e.dept_id IN (1,2,3);
++------------+-----------+-----------+
+| first_name | last_name | dept_name |
++------------+-----------+-----------+
+| Rahul      | sharma    | IT        |
+| Priya      | nair      | IT        |
+| Aishd      | khan      | HR        |
+| John       | smith     | Finance   |
++------------+-----------+-----------+
+
+14) SELECT e.first_name,e.last_name,j.job_title,d.dept_name FROM employees e JOIN jobs j ON e.job_id=j.job_id JOIN departments d ON 
+    -> e.dept_id=d.dept_id WHERE e.dept_id IN (1,2,3) AND e.salary>10000;
++------------+-----------+------------+-----------+
+| first_name | last_name | job_title  | dept_name |
++------------+-----------+------------+-----------+
+| John       | smith     | Accountant | Finance   |
+| Rahul      | sharma    | programer  | IT        |
++------------+-----------+------------+-----------+
+
+15) SELECT d.dept_name,l.street_address,l.postal_code,c.country_name,r.region_name FROM departments d JOIN locations l ON d.location_id=l.location_id JOIN 
+    -> countries c ON l.country_id=c.country_id JOIN regions r ON c.region_id=r.region_id;
++-----------+----------------+-------------+----------------+-------------+
+| dept_name | street_address | postal_code | country_name   | region_name |
++-----------+----------------+-------------+----------------+-------------+
+| IT        | mgroad         | 56000       | India          | Asia        |
+| HR        | mgroad         | 56000       | India          | Asia        |
+| Finance   | Oxfored        | w1          | United Kingdom | Europe      |
+| Marketing | Oxfored        | w1          | United Kingdom | Europe      |
++-----------+----------------+-------------+----------------+-------------+
+
+16) SELECT e.first_name,e.last_name,e.dept_id,d.dept_name FROM employees e LEFT JOIN departments d ON e.dept_id=d.dept_id;
++------------+-----------+---------+-----------+
+| first_name | last_name | dept_id | dept_name |
++------------+-----------+---------+-----------+
+| Rahul      | sharma    |       1 | IT        |
+| Aishd      | khan      |       2 | HR        |
+| John       | smith     |       3 | Finance   |
+| Priya      | nair      |       1 | IT        |
+| David      | brown     |       4 | Marketing |
++------------+-----------+---------+-----------+
+
+17) SELECT e.first_name,e.last_name,d.dept_name,l.city,l.state_province FROM employees e JOIN departments d ON e.dept_id=d.dept_id 
+    -> JOIN locations l ON d.location_id=l.location_id WHERE e.first_name LIKE '%z%';
+Empty set (0.01 sec)
+
+18) SELECT e.first_name,e.last_name,d.dept_id,d.dept_name FROM departments d LEFT JOIN employees e ON d.dept_id=e.dept_id;
++------------+-----------+---------+-----------+
+| first_name | last_name | dept_id | dept_name |
++------------+-----------+---------+-----------+
+| Rahul      | sharma    |       1 | IT        |
+| Priya      | nair      |       1 | IT        |
+| Aishd      | khan      |       2 | HR        |
+| John       | smith     |       3 | Finance   |
+| David      | brown     |       4 | Marketing |
++------------+-----------+---------+-----------+
+
+19) SELECT e.first_name AS employee_name,m.first_name AS manager_name FROM employees e LEFT JOIN employees m ON e.manager_id=m.employee_id;
++---------------+--------------+
+| employee_name | manager_name |
++---------------+--------------+
+| Rahul         | NULL         |
+| Aishd         | Rahul        |
+| John          | Rahul        |
+| Priya         | Rahul        |
+| David         | John         |
++---------------+--------------+
+
+20) SELECT first_name,last_name,dept_id FROM employees WHERE dept_id=(SELECT dept_id FROM employees WHERE last_name='Smith');
++------------+-----------+---------+
+| first_name | last_name | dept_id |
++------------+-----------+---------+
+| John       | smith     |       3 |
++------------+-----------+---------+
+
+21) SELECT j.job_title,e.first_name,(j.max_salary-e.salary) AS salary_difference FROM employees e JOIN jobs j ON e.job_id=j.job_id;
++-------------------+------------+-------------------+
+| job_title         | first_name | salary_difference |
++-------------------+------------+-------------------+
+| Accountant        | John       |          13000.00 |
+| HR Repesent       | Aishd      |           6000.00 |
+| programer         | Rahul      |           5000.00 |
+| programer         | Priya      |          13000.00 |
+| Marketing Manager | David      |           3000.00 |
++-------------------+------------+-------------------+
+
+22) SELECT d.dept_name,AVG(e.salary) AS avg_salary,COUNT(e.commission) AS commission_count FROM departments d LEFT JOIN employees e ON d.dept_id=e.dept_id GROUP BY d.dept_name;
++-----------+--------------+------------------+
+| dept_name | avg_salary   | commission_count |
++-----------+--------------+------------------+
+| IT        | 11000.000000 |                1 |
+| HR        |  9000.000000 |                0 |
+| Finance   | 12000.000000 |                1 |
+| Marketing | 22000.000000 |                1 |
++-----------+--------------+------------------+
+
+23)CREATE OR REPLACE VIEW delhi_emp AS SELECT e.employee_id,e.first_name,e.phone_no,j.job_title,d.dept_name,m.first_name AS manager_name FROM employees e JOIN jobs j ON e.job_id=j.job_id JOIN 
+    -> departments d ON e.dept_id=d.dept_id JOIN locations l ON d.location_id=l.location_id LEFT JOIN employees m ON e.manager_id=m.employee_id WHERE l.city='London';
+Query OK, 0 rows affected (0.01 sec)
+
+24) SELECT first_name FROM delhi_emp WHERE job_title='Marketing Manager' AND dept_name='Marketing';
++------------+
+| first_name |
++------------+
+| David      |
++------------+
+
+25) UPDATE employees SET phone_no='99999' WHERE first_name='John';
+    Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+
+26)SELECT * FROM employees e WHERE NOT EXISTS (SELECT * FROM depentants d WHERE d.employee_id=e.employee_id);
++-------------+------------+-----------+-----------------+----------+------------+---------+----------+------------+---------+------------+
+| employee_id | first_name | last_name | email           | phone_no | hire_date  | job_id  | salary   | manager_id | dept_id | commission |
++-------------+------------+-----------+-----------------+----------+------------+---------+----------+------------+---------+------------+
+|         103 | John       | smith     | john@gmail.com  | 99999    | 2023-04-15 | FIN-Acc | 12000.00 |        101 |       3 |    1500.00 |
+|         104 | Priya      | nair      | priya@gmail.com | 999994   | 2023-04-18 | IT-PROG |  7000.00 |        101 |       1 |       NULL |
+|         105 | David      | brown     | david@gmail.com | 999995   | 2022-05-20 | MKT-Man | 22000.00 |        103 |       4 |    3000.00 |
++-------------+------------+-----------+-----------------+----------+------------+---------+----------+------------+---------+------------+
+
+27) SELECT * FROM employees WHERE manager_id = 101 UNION SELECT * FROM employees WHERE manager_id = 201;
++-------------+------------+-----------+-----------------+----------+------------+---------+----------+------------+---------+------------+
+| employee_id | first_name | last_name | email           | phone_no | hire_date  | job_id  | salary   | manager_id | dept_id | commission |
++-------------+------------+-----------+-----------------+----------+------------+---------+----------+------------+---------+------------+
+|         102 | Aishd      | khan      | Aishd@gmail.com | 999992   | 2022-01-12 | HR-Rep  |  9000.00 |        101 |       2 |       NULL |
+|         103 | John       | smith     | john@gmail.com  | 99999    | 2023-04-15 | FIN-Acc | 12000.00 |        101 |       3 |    1500.00 |
+|         104 | Priya      | nair      | priya@gmail.com | 999994   | 2023-04-18 | IT-PROG |  7000.00 |        101 |       1 |       NULL |
++-------------+------------+-----------+-----------------+----------+------------+---------+----------+------------+---------+------------+
+
+28) SELECT * FROM employees e WHERE EXISTS (SELECT * FROM depentants d WHERE d.employee_id = e.employee_id);
++-------------+------------+-----------+-----------------+----------+------------+---------+----------+------------+---------+------------+
+| employee_id | first_name | last_name | email           | phone_no | hire_date  | job_id  | salary   | manager_id | dept_id | commission |
++-------------+------------+-----------+-----------------+----------+------------+---------+----------+------------+---------+------------+
+|         101 | Rahul      | sharma    | rahul@gmail.com | 999991   | 2022-01-10 | IT-PROG | 15000.00 |       NULL |       1 |    2000.00 |
+|         102 | Aishd      | khan      | Aishd@gmail.com | 999992   | 2022-01-12 | HR-Rep  |  9000.00 |        101 |       2 |       NULL |
++-------------+------------+-----------+-----------------+----------+------------+---------+----------+------------+---------+------------+
+
